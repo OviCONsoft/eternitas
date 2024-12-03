@@ -6,6 +6,14 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import jwt  
 from datetime import datetime, timedelta
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models import DATABASE_URL
+from models import User
+
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+session=Session()
 
 app = FastAPI()
 
@@ -16,10 +24,10 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization", "X-Requested-With", "X-API-KEY"],
 )
 
-users = {}  
+users={}
 SECRET_KEY = "your_secret_key" 
 
-class User(BaseModel):
+class Usertype(BaseModel):
     email: str
     password: str
 
@@ -48,14 +56,14 @@ def send_verification_email(email: str, token: str):
 
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465) 
-        server.login(sender_email, "wzhu kvqk nptu mcuv")  
+        server.login(sender_email,"wzhu kvqk nptu mcuv")  
         server.sendmail(sender_email, receiver_email, msg.as_string())
         server.quit()
     except Exception as e:
         print(f"Failed to send email: {str(e)}")
 
 @app.post("/api/register")
-async def register(user: User):
+async def register(user: Usertype):
     if user.email in users:
         raise HTTPException(status_code=400, detail="User already exists")
 
@@ -76,6 +84,11 @@ async def verify_email(token: str):
             raise HTTPException(status_code=400, detail="Invalid token")
 
         users[email]["verified"] = True
+
+        add_user=User(email=email,password=users[email]["password"])
+        session.add(add_user)
+        session.commit()
+
         return {"message": "Email verified successfully. You can now proceed to profile setup."}
     
     except jwt.ExpiredSignatureError:
