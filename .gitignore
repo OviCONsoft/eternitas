@@ -2,11 +2,10 @@
 
 # Ignore virtual environment
 venv/
-
 # Ignore Python cache files
 __pycache__/
 *.pyc
-
+*.db
 # dependencies
 /node_modules
 /.pnp
@@ -19,6 +18,7 @@ __pycache__/
 /build
 
 # misc
+*.env
 .DS_Store
 .env.local
 .env.development.local

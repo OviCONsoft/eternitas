@@ -4,6 +4,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { registerUser } from "./api";
 import Logo from './logo.png';
 
 const SignUpPage = () => {
@@ -19,23 +20,6 @@ const SignUpPage = () => {
     const [successMessage, setSuccessMessage] = useState("");
 
     const navigate = useNavigate(); 
-
-    const registerUser = async (email: string, password: string) => {
-        const response = await fetch('http://localhost:8000/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password })
-        });
-    
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
-        }
-    
-        return response.json();
-    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -66,10 +50,11 @@ const SignUpPage = () => {
             try {
                 const result = await registerUser(email, password);
                 setSuccessMessage("Registration successful. Please check your email to verify your account.");
-                setApiError(""); 
+                setApiError("");
+                
             } catch (error) {
-                setApiError("Registration failed. Please try again.");
-                setSuccessMessage(""); 
+                setApiError(`${error}`);
+                setSuccessMessage("");
             }
         }
     };

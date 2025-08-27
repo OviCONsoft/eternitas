@@ -1,0 +1,8 @@
+[tool.isort]
+profile = "black"  # Ensure isort follows black's import order
+line_length = 88
+known_third_party = ["fastapi", "pydantic"]
+
+[tool.black]
+line-length = 88  # Use the same line length as isort
+skip-string-normalization = true

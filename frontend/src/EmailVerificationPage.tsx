@@ -10,7 +10,7 @@ const EmailVerificationPage = () => {
     useEffect(() => {
         const verifyEmail = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/verify_email/${token}`);
+                const response = await fetch(`${process.env.REACT_APP_SERVER_ENV}/api/verify_email/${token}`);
                 
                 if (!response.ok) {
                     throw new Error("Email verification failed");

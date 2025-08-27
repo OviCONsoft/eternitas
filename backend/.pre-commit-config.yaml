@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.1.0 # or the latest stable version
+    hooks:
+      - id: black
+        language_version: python3 # or specify a version like python3.9
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1 # Use the latest version of isort
+    hooks:
+      - id: isort
+        name: isort
+        description: Sort imports using isort
+        language: python
+        files: \.py$
